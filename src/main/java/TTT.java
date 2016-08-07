@@ -1,9 +1,8 @@
 public class TTT {
-	
 	// X = 1 (player 1), 0 = 0 (player 2)
     private static final int EMPTY = -1;
     private final int[][] board;
-    private final int boardSize = 3;
+    private final int rowColSize = 3;
     private String player1; 
     private String player2;
     private int symbol;                     
@@ -25,28 +24,29 @@ public class TTT {
     }
 
     public void move(final int row, final int col) throws IllegalArgumentException {
-        if (row < 0 || row > boardSize - 1 || col < 0 || col > boardSize - 1) {
-            throw new IllegalArgumentException(SlackErrors.OUT_OF_BOUNDS.getValue());
-        }
-        else if (board[row][col] != EMPTY) {
-            throw new IllegalArgumentException(SlackErrors.ALEADY_FILLED.getValue());
-        }
-        else{
-        board[row][col] = symbol;
-        currSize++;
+		if (row < 0 || row > rowColSize - 1 || col < 0 || col > rowColSize - 1) {
+			throw new IllegalArgumentException(
+					SlackErrors.OUT_OF_BOUNDS.getValue());
+		} else if (board[row][col] != EMPTY) {
+			throw new IllegalArgumentException(
+					SlackErrors.ALEADY_FILLED.getValue());
+		} else {
+			board[row][col] = symbol;
+			currSize++;
 
-        if (hasWon(symbol)){
-        	tttStatus = cP.equals(player1)? TTTStatus.PLAYER1_WON : TTTStatus.PLAYER2_WON;
-            return;
-        }
+			if (hasWon(symbol)) {
+				tttStatus = cP.equals(player1) ? TTTStatus.PLAYER1_WON
+						: TTTStatus.PLAYER2_WON;
+				return;
+			}
 
-        else if (currSize == boardSize * boardSize) {
-        	tttStatus = TTTStatus.DRAW;
-            return;
-        }
-        cP = cP.equals(player1) ? player2 : player1;
-        symbol ^= 1;;
-        }
+			else if (currSize == rowColSize * rowColSize) {
+				tttStatus = TTTStatus.DRAW;
+				return;
+			}
+			cP = cP.equals(player1) ? player2 : player1;
+			symbol ^= 1;
+		}
     }
 
     public boolean hasWon(int symbol) {
@@ -55,7 +55,7 @@ public class TTT {
 
     private boolean checkRows(int symbol) {
     	boolean isRow = false;
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < rowColSize; i++){
         	if(checkRow(i, symbol)){
         		isRow = true;
         		break;
@@ -66,12 +66,12 @@ public class TTT {
     
     private boolean checkRow(int row, int symbol) {
         int col = 0;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < rowColSize; i++) {
           if (board[row][ i] == symbol) {
             col++;
           }
         }
-        return col == 3;
+        return col == rowColSize;
       }
 
     private boolean checkCols(int symbol) {
@@ -87,35 +87,35 @@ public class TTT {
     
     private boolean checkCol(int col, int symbol) {
         int row = 0;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < rowColSize; i++) {
           if (board[i][col] == symbol) {
             row++;
           }
         }
-        return row == 3;
+        return row == rowColSize;
       }
     
     public boolean checkDiag(int symbol) {
         int diag1 = 0;
         int diag2 = 0;
         
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < rowColSize; i++) {
           if (board[i][i] == symbol) {
             diag1++;
           }
-          if (board[i][3 -1 -i] == symbol) {
+          if (board[i][rowColSize -1 -i] == symbol) {
             diag2 ++;
           }
         }
-        return diag1 == 3 || diag2 == 3;
+        return diag1 == rowColSize || diag2 == rowColSize;
       }
 
     public String displayBoard() {   	
         StringBuilder sb = new StringBuilder();
         sb.append("\n-------------\n");
-        for (int row = 0; row < boardSize; row++) {
+        for (int row = 0; row < rowColSize; row++) {
         	sb.append("|");
-            for (int col = 0; col < boardSize; col++) {
+            for (int col = 0; col < rowColSize; col++) {
                 switch (board[row][col]) {
                     case 1:
                         sb.append(" X ");
@@ -129,11 +129,11 @@ public class TTT {
                     default:
                         break;
                 }
-                if (col < boardSize) {
+                if (col < rowColSize) {
                     sb.append("|");
                 }
             }
-            if (row < boardSize){
+            if (row < rowColSize){
                 sb.append("\n-------------\n");
             }
         }
