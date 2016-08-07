@@ -15,7 +15,7 @@ public class StatusCommand implements Command{
         sb.append(ttt.displayBoard());
         sb.append("\n");
         sb.append(ttt.getWhoseTurnToPlay());
-        sb.append("’s turn.");
+        sb.append("'s turn.");
         return new SlackResponse(sb.toString(), ResponseType.IN_CHANNEL.getValue());
     }
 }
