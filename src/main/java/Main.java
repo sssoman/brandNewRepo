@@ -20,7 +20,7 @@ public class Main extends AbstractHandler {
     private StartCommand startCommandInv;
     private MoveCommand markCommandInv;
     private StatusCommand statusCommandInv;
-    private final String expectedToken = "IPp6IULLVFsycYkfAT8Vogg4";
+    private String expectedToken = "IPp6IULLVFsycYkfAT8Vogg4";
     
     /* Request parameters*/
     private static final String TOKEN = "token";
@@ -39,6 +39,7 @@ public class Main extends AbstractHandler {
     	startCommandInv = new StartCommand();
     	markCommandInv = new MoveCommand();
     	statusCommandInv = new StatusCommand();
+       expectedToken = System.getenv("SLACK_AUTH_TOKEN");
     }
   
   /*  @SuppressWarnings("resource")
