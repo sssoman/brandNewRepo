@@ -36,8 +36,7 @@ public class Main extends AbstractHandler {
     private static final String RESPONSE_URL = "response_url";
 
     /* Response parameters*/
-    private static final String RESPONSE_TYPE = "response_type”;
-    private static final String TEXT = "text";
+    private static final String RESPONSE_TYPE = "response_type";
 
     Main(){
     	channelGames = new ConcurrentHashMap<>();
@@ -159,8 +158,8 @@ public class Main extends AbstractHandler {
 	
 	void createResponse(SlackResponse slackResponse, HttpServletResponse response){
                JSONObject jResp = new JSONObject();
-               obj.put(RESPONSE_TYPE, slackResponse.getResponseType());
-               obj.put(TEXT, slackResponse.getText());
+               jResp.put(RESPONSE_TYPE, slackResponse.getResponseType());
+               jResp.put(TEXT, slackResponse.getText());
 		response.setContentType("application/json");
 		response.setStatus(HttpStatus.OK_200);
 		try {
