@@ -13,6 +13,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.servlet.*;
+import org.json.JSONObject;
 
 public class Main extends AbstractHandler {
 
@@ -33,6 +34,10 @@ public class Main extends AbstractHandler {
     private static final String COMMAND = "command";
     private static final String TEXT = "text";
     private static final String RESPONSE_URL = "response_url";
+
+    /* Response parameters*/
+    private static final String RESPONSE_TYPE = "response_type”;
+    private static final String TEXT = "text";
 
     Main(){
     	channelGames = new ConcurrentHashMap<>();
@@ -153,10 +158,13 @@ public class Main extends AbstractHandler {
 	}
 	
 	void createResponse(SlackResponse slackResponse, HttpServletResponse response){
-		response.setContentType("text/html");
+               JSONObject jResp = new JSONObject();
+               obj.put(RESPONSE_TYPE, slackResponse.getResponseType());
+               obj.put(TEXT, slackResponse.getText());
+		response.setContentType("application/json");
 		response.setStatus(HttpStatus.OK_200);
 		try {
-			response.getWriter().print(slackResponse.getText());
+			response.getWriter().print(jResp.toString());
 		} catch (IOException e) {
 			new SlackResponse(
 					SlackErrors.BAD_REQUEST.getValue(),
