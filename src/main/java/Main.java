@@ -115,7 +115,7 @@ public class Main extends AbstractHandler {
 					String command = tokens[0];
 					try {
 					    slackUsers = getSlackUsers(sRequest.getChannelId());
-				    } catch (IOException e) {
+				    } catch (Exception e) {
 					    // No users found in the team, invalid state but do not want the error to propagate
 					    // Would just add logging/internal errors
 				    	LOGGER.log(Level.SEVERE, "Unable to get slack user list!");
