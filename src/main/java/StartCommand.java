@@ -1,8 +1,9 @@
 import java.util.Map;
+import java.util.Set;
 
 public class StartCommand implements Command {
 	public SlackResponse invoke(SlackRequest slackRequest,
-			Map<String, TTT> channelGames) {
+			Map<String, TTT> channelGames, Set<String> slackUsers) {
 		if (slackRequest == null) {
 			return new SlackResponse(SlackErrors.BAD_REQUEST.getValue(),
 					ResponseType.EPHEMERAL.getValue());
@@ -18,15 +19,26 @@ public class StartCommand implements Command {
 							ResponseType.EPHEMERAL.getValue());
 				}
 				final String opponent = tokens[1];
-				TTT game = new TTT(BOARD_SIZE, slackRequest.getUserName(),
-						opponent);
-				channelGames.putIfAbsent(slackRequest.getChannelId(), game);
+				if (!slackUsers.contains(opponent)) {
+					/* For this use case only users with access can issue this command.
+					 * Hence we could say invalid user error here but in case this is a 
+					 * phishing attempt just show a generic error. 
+					 */
+					return new SlackResponse(
+							SlackErrors.BAD_REQUEST.getValue(),
+							ResponseType.EPHEMERAL.getValue());
+				} else {
+					TTT ttt = new TTT(BOARD_SIZE, slackRequest.getUserName(),
+							opponent);
+					channelGames.putIfAbsent(slackRequest.getChannelId(), ttt);
 
-				return new SlackResponse(
-						"New tic tac toe game initiated! Player 1 : "
-								+ game.getPlayer1() + " Player 2 : "
-								+ game.getPlayer2(),
-						ResponseType.IN_CHANNEL.getValue());
+					return new SlackResponse(
+							"New tic tac toe game initiated! Player 1 : "
+									+ ttt.getPlayer1() + " Player 2 : "
+									+ ttt.getPlayer2() + "\n"
+									+ slackRequest.getUserName() + "'s turn",
+							ResponseType.IN_CHANNEL.getValue());
+				}
 			}
 		}
 	}

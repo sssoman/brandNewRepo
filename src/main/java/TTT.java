@@ -16,37 +16,31 @@ public class TTT {
         this.player2 = player2;
     	this.symbol = 1;
         this.cP = player1;
-        for (int row = 0; row < 3; row ++){
-            for (int col = 0; col < 3; col++){
+        for (int row = 0; row < rowColSize; row ++){
+            for (int col = 0; col < rowColSize; col++){
             	board[row][col] = -1;
             }
         }
     }
+    
+    public String getPlayer1() {
+        return player1;
+    }
 
-    public void move(final int row, final int col) throws IllegalArgumentException {
-		if (row < 0 || row > rowColSize - 1 || col < 0 || col > rowColSize - 1) {
-			throw new IllegalArgumentException(
-					SlackErrors.OUT_OF_BOUNDS.getValue());
-		} else if (board[row][col] != EMPTY) {
-			throw new IllegalArgumentException(
-					SlackErrors.ALEADY_FILLED.getValue());
-		} else {
-			board[row][col] = symbol;
-			currSize++;
+    public String getPlayer2() {
+        return player2;
+    }
 
-			if (hasWon(symbol)) {
-				tttStatus = cP.equals(player1) ? TTTStatus.PLAYER1_WON
-						: TTTStatus.PLAYER2_WON;
-				return;
-			}
+    public int getCurrSize() {
+        return currSize;
+    }
 
-			else if (currSize == rowColSize * rowColSize) {
-				tttStatus = TTTStatus.DRAW;
-				return;
-			}
-			cP = cP.equals(player1) ? player2 : player1;
-			symbol ^= 1;
-		}
+    public String getCurrentPlayer() {
+        return cP;
+    }
+
+    public TTTStatus getTTTStatus() {
+        return tttStatus;
     }
 
     public boolean hasWon(int symbol) {
@@ -76,7 +70,7 @@ public class TTT {
 
     private boolean checkCols(int symbol) {
     	boolean isCol = false;
-        for (int i = 0; i < 3 ; i++) {
+        for (int i = 0; i < rowColSize ; i++) {
         	if(checkCol(i, symbol)){
         		isCol = true;
         		break;
@@ -110,6 +104,32 @@ public class TTT {
         return diag1 == rowColSize || diag2 == rowColSize;
       }
 
+    public void move(final int row, final int col) throws IllegalArgumentException {
+		if (row < 0 || row > rowColSize - 1 || col < 0 || col > rowColSize - 1) {
+			throw new IllegalArgumentException(
+					SlackErrors.OUT_OF_BOUNDS.getValue());
+		} else if (board[row][col] != EMPTY) {
+			throw new IllegalArgumentException(
+					SlackErrors.ALEADY_FILLED.getValue());
+		} else {
+			board[row][col] = symbol;
+			currSize++;
+
+			if (hasWon(symbol)) {
+				tttStatus = cP.equals(player1) ? TTTStatus.PLAYER1_WON
+						: TTTStatus.PLAYER2_WON;
+				return;
+			}
+
+			else if (currSize == rowColSize * rowColSize) {
+				tttStatus = TTTStatus.DRAW;
+				return;
+			}
+			cP = cP.equals(player1) ? player2 : player1;
+			symbol ^= 1;
+		}
+    }
+ 
     public String displayBoard() {   	
         StringBuilder sb = new StringBuilder();
         sb.append("\n-------------\n");
@@ -150,30 +170,6 @@ public class TTT {
             sb.append(player2);
         }
         return sb.toString();
-    }
-
-    public String getCurrentPlayer() {
-        return cP;
-    }
-
-    public String getPlayer1() {
-        return player1;
-    }
-
-    public String getPlayer2() {
-        return player2;
-    }
-
-    public int getCurrSize() {
-        return currSize;
-    }
-
-    public TTTStatus getGameStatus() {
-        return tttStatus;
-    }
-
-    public void setGameStatus(TTTStatus tttStatus) {
-        this.tttStatus = tttStatus;
     }
 
 }

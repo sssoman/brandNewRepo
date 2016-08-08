@@ -1,9 +1,10 @@
 import java.util.Map;
+import java.util.Set;
 
 public class MoveCommand implements Command {
 
 	public SlackResponse invoke(SlackRequest slackRequest,
-			Map<String, TTT> channelGames) {
+			Map<String, TTT> channelGames, Set<String> slackUsers) {
 		if (slackRequest == null) {
 			return new SlackResponse(SlackErrors.BAD_REQUEST.getValue(),
 					ResponseType.EPHEMERAL.getValue());
@@ -44,12 +45,12 @@ public class MoveCommand implements Command {
 					try {
 						ttt.move(row, col);
 						String endingMessage = null;
-						if (ttt.getGameStatus() == TTTStatus.PLAYER1_WON
-								|| ttt.getGameStatus() == TTTStatus.PLAYER2_WON) {
+						if (ttt.getTTTStatus() == TTTStatus.PLAYER1_WON
+								|| ttt.getTTTStatus() == TTTStatus.PLAYER2_WON) {
 							endingMessage = "Game ends! "
 									+ ttt.getCurrentPlayer() + " won!" + "\n"
 									+ ttt.displayBoard();
-						} else if (ttt.getGameStatus() == TTTStatus.DRAW) {
+						} else if (ttt.getTTTStatus() == TTTStatus.DRAW) {
 							endingMessage = "It is a draw! " + "\n"
 									+ ttt.displayBoard();
 						}

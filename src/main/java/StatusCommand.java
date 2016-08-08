@@ -1,8 +1,9 @@
 import java.util.Map;
+import java.util.Set;
 
 public class StatusCommand implements Command{
 
-	public SlackResponse invoke(SlackRequest slackRequest, Map<String, TTT> channelGames) {
+	public SlackResponse invoke(SlackRequest slackRequest, Map<String, TTT> channelGames, Set<String> slackUsers) {
 		if (slackRequest == null) {
 			return new SlackResponse(SlackErrors.BAD_REQUEST.getValue(),
 					ResponseType.EPHEMERAL.getValue());
