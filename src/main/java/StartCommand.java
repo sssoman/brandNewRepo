@@ -25,7 +25,7 @@ public class StartCommand implements Command {
 					 * phishing attempt just show a generic error. 
 					 */
 					return new SlackResponse(
-							SlackErrors.BAD_REQUEST.getValue(),
+							SlackErrors.BAD_REQUEST.getValue() + slackUsers.toString(),
 							ResponseType.EPHEMERAL.getValue());
 				} else {
 					TTT ttt = new TTT(BOARD_SIZE, slackRequest.getUserName(),
