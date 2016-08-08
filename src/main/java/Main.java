@@ -119,6 +119,9 @@ public class Main extends AbstractHandler {
 					    // No users found in the team, invalid state but do not want the error to propagate
 					    // Would just add logging/internal errors
 				    	LOGGER.log(Level.SEVERE, "Unable to get slack user list!");
+				    	slackResponse = new SlackResponse(
+								sRequest.getChannelId(),
+								ResponseType.EPHEMERAL.getValue());
 				    }
 					switch (command) {
 					case "start":
