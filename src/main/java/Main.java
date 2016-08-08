@@ -49,7 +49,8 @@ public class Main extends AbstractHandler {
     /* Response parameters*/
     private static final String RESPONSE_TYPE = "response_type";
     
-    private static final String SLACK_USER_URL = "https://slack.com/api/users.list";
+    private static final String SLACK_CHANNEL_URL = "https://slack.com/api/channels.info";
+    private static final String SLACK_USER_URL = "https://slack.com/api/users.info";
 
     Main(){
     	channelGames = new ConcurrentHashMap<>();
@@ -97,7 +98,7 @@ public class Main extends AbstractHandler {
 			throws IOException, ServletException {
 		SlackRequest sRequest = parseRequest(request);
 		SlackResponse slackResponse;
-		if (sRequest == null || sRequest.getText() == null) {
+		if (sRequest == null || sRequest.getText() == null || sRequest.getChannelId() == null) {
 			slackResponse = new SlackResponse(
 					SlackErrors.BAD_REQUEST.getValue(),
 					ResponseType.EPHEMERAL.getValue());
@@ -207,7 +208,7 @@ public class Main extends AbstractHandler {
     
     private Set<String> getSlackUsers(String channelId) throws IOException{
 		Set<String> usersList = new HashSet<String>();
-		URL url = new URL(SLACK_USER_URL);
+		URL url = new URL(SLACK_CHANNEL_URL);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
@@ -238,8 +239,7 @@ public class Main extends AbstractHandler {
     }
     
     private String getUserName(String userId) throws IOException{
-		String sUrl = "https://slack.com/api/users.info";
-		URL url = new URL(sUrl);
+		URL url = new URL(SLACK_USER_URL);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
