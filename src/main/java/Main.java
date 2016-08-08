@@ -58,13 +58,6 @@ public class Main extends AbstractHandler {
     	statusCommandInv = new StatusCommand();
         expectedToken = System.getenv("SLACK_AUTH_TOKEN");
         apiToken = System.getenv("SLACK_API_TOKEN");
-       try {
-		    slackUsers = getSlackUsers();
-	    } catch (IOException e) {
-		    // No users found in the team, invalid state but do not want the error to propagate
-		    // Would just add logging/internal errors
-	    	LOGGER.log(Level.SEVERE, "Unable to get slack user list!");
-	    }
     }
   
   /*  @SuppressWarnings("resource")
@@ -120,6 +113,13 @@ public class Main extends AbstractHandler {
 				if (text != null && !text.isEmpty()) {
 					final String[] tokens = text.split(Command.SEPARATOR);
 					String command = tokens[0];
+					try {
+					    slackUsers = getSlackUsers(sRequest.getChannelId());
+				    } catch (IOException e) {
+					    // No users found in the team, invalid state but do not want the error to propagate
+					    // Would just add logging/internal errors
+				    	LOGGER.log(Level.SEVERE, "Unable to get slack user list!");
+				    }
 					switch (command) {
 					case "start":
 						slackResponse = startCommandInv.invoke(sRequest,
@@ -202,13 +202,13 @@ public class Main extends AbstractHandler {
         server.join();
     }
     
-    private Set<String> getSlackUsers() throws IOException{
+    private Set<String> getSlackUsers(String channelId) throws IOException{
 		Set<String> usersList = new HashSet<String>();
 		URL url = new URL(SLACK_USER_URL);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-		String urlParameters = "token=" + apiToken;
+		String urlParameters = "token=" + apiToken + "&channel=" + channelId;
 		conn.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
 		wr.writeBytes(urlParameters);
@@ -224,13 +224,41 @@ public class Main extends AbstractHandler {
 		}
 		in.close();
 		JSONObject jo1 = new JSONObject(response.toString());
-		JSONArray ja = new JSONArray(jo1.get("members").toString());
-		int n = ja.length();
-		for (int i = 0; i < n; i++) {
-			JSONObject jo = ja.getJSONObject(i);
-			String name = jo.getString("name");
-			usersList.add(name);
-		}
+        JSONObject jo2 = new JSONObject(jo1.get("channel").toString());
+        JSONArray ja = new JSONArray(jo2.get("members").toString());
+        int n = ja.length();
+        for (int i = 0; i < n; i++) {
+        	String userId = ja.getString(i);
+        	usersList.add(getUserName(userId));
+        }
 		return usersList;
+    }
+    
+    private String getUserName(String userId) throws IOException{
+		String sUrl = "https://slack.com/api/users.info";
+		URL url = new URL(sUrl);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+		String urlParameters = "token=" + apiToken + "&user=" + userId;
+
+		conn.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+		wr.writeBytes(urlParameters);
+		wr.flush();
+		wr.close();
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+				conn.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+		JSONObject jo1 = new JSONObject(response.toString());
+		JSONObject jo2 = new JSONObject(jo1.get("user").toString());
+		return jo2.getString("name");
     }
 }
