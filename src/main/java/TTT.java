@@ -43,6 +43,10 @@ public class TTT {
         return tttStatus;
     }
 
+    public int[][] getBoard() {
+        return board;
+    }
+
     public boolean hasWon(int symbol) {
         return checkRows(symbol) || checkCols(symbol) || checkDiag(symbol);
     }
