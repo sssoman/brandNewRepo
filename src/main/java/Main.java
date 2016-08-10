@@ -23,6 +23,16 @@ import org.eclipse.jetty.servlet.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import command.Command;
+import command.MoveCommand;
+import command.StartCommand;
+import command.StatusCommand;
+import datamodel.ResponseType;
+import datamodel.SlackErrors;
+import datamodel.SlackRequest;
+import datamodel.SlackResponse;
+import datamodel.TTT;
+
 public class Main extends AbstractHandler {
 	private static final Logger LOGGER  = Logger.getLogger(Main.class.getName());
 
@@ -228,13 +238,13 @@ public class Main extends AbstractHandler {
 		}
 		in.close();
 		JSONObject jo1 = new JSONObject(response.toString());
-        JSONObject jo2 = new JSONObject(jo1.get("channel").toString());
-        JSONArray ja = new JSONArray(jo2.get("members").toString());
-        int n = ja.length();
-        for (int i = 0; i < n; i++) {
-        	String userId = ja.getString(i);
-        	usersList.add(getUserName(userId));
-        }
+		JSONObject jo2 = new JSONObject(jo1.get("channel").toString());
+		JSONArray ja = new JSONArray(jo2.get("members").toString());
+		int n = ja.length();
+		for (int i = 0; i < n; i++) {
+			String userId = ja.getString(i);
+			usersList.add(getUserName(userId));
+		}
 		return usersList;
     }
     
