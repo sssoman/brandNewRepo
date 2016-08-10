@@ -6,10 +6,10 @@ Using slash commands create a game of tic-tac-toe within Slack.
 Custom slash command for the game : /tictactoe
 
 Initialize the board with -1s which denotes empty. There are two players 1 and 2 - 1 corresponds to ‘X’ and 2 corresponds to ‘0’.
-For responses that need to be visible to all users of that channel we use ‘in_channel’ response_type e.g. publicly display the board.
+For responses that need to be visible to all users of that channel we use 'in_channel' response_type e.g. publicly display the board.
+For other responses we use the 'ephemeral' response_type.
 
 Deployed on heroku : https://hidden-gorge-10416.herokuapp.com/
-https://cryptic-wave-68313.herokuapp.com/
 
 ## Commands
     (Syntax : /tictactoe command_name)
