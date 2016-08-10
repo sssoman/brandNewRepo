@@ -121,7 +121,7 @@ public class Main extends AbstractHandler {
 					    // Would just add logging/internal errors
 				    	LOGGER.log(Level.SEVERE, "Unable to get slack user list!");
 				    	slackResponse = new SlackResponse(
-								sRequest.getChannelId(),
+				    			SlackErrors.INVALID_CHANNEL_STATE.getValue(),
 								ResponseType.EPHEMERAL.getValue());
 				    }
 					switch (command) {
@@ -208,25 +208,7 @@ public class Main extends AbstractHandler {
     
     private Set<String> getSlackUsers(String channelId) throws IOException{
 		Set<String> usersList = new HashSet<String>();
-		URL url = new URL(SLACK_CHANNEL_URL);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-		String urlParameters = "token=" + apiToken + "&channel=" + channelId;
-		conn.setDoOutput(true);
-		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-		wr.writeBytes(urlParameters);
-		wr.flush();
-		wr.close();
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				conn.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
+		String response = getJSONResponse(SLACK_CHANNEL_URL, "channel", channelId);
 		JSONObject jo1 = new JSONObject(response.toString());
 		JSONObject jo2 = new JSONObject(jo1.get("channel").toString());
 		JSONArray ja = new JSONArray(jo2.get("members").toString());
@@ -239,13 +221,24 @@ public class Main extends AbstractHandler {
     }
     
     private String getUserName(String userId) throws IOException{
-		URL url = new URL(SLACK_USER_URL);
+    	String response = getJSONResponse(SLACK_USER_URL, "user", userId);
+		JSONObject jo1 = new JSONObject(response);
+		JSONObject jo2 = new JSONObject(jo1.get("user").toString());
+		return jo2.getString("name");
+    }
+    
+    private String getJSONResponse(String urlPath, String paramName, String paramVal) throws IOException{
+		URL url = new URL(urlPath);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-		String urlParameters = "token=" + apiToken + "&user=" + userId;
-
+		String urlParameters = null;
+		if(paramName.equals("channel")){
+		    urlParameters = "token=" + apiToken + "&channel=" + paramVal;
+		}
+		else if(paramName.equals("user")){
+			urlParameters = "token=" + apiToken + "&user=" + paramVal;
+		}
 		conn.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
 		wr.writeBytes(urlParameters);
@@ -260,8 +253,6 @@ public class Main extends AbstractHandler {
 			response.append(inputLine);
 		}
 		in.close();
-		JSONObject jo1 = new JSONObject(response.toString());
-		JSONObject jo2 = new JSONObject(jo1.get("user").toString());
-		return jo2.getString("name");
+		return response.toString();
     }
 }
