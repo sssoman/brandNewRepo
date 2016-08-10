@@ -1,5 +1,6 @@
-
-
+/**
+ * Representation of states of the game
+ */
 public enum TTTStatus {
     IN_PROGRESS,
     PLAYER1_WON,

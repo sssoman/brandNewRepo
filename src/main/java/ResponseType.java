@@ -1,3 +1,6 @@
+/**
+ * Response types for SLack Response
+ */
 
 public enum ResponseType {
 	EPHEMERAL("ephemeral"), 

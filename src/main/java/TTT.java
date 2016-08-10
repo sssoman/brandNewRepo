@@ -1,6 +1,5 @@
 public class TTT {
 	// X = 1 (player 1), 0 = 0 (player 2), -1 (empty)
-    private static final int EMPTY = -1;
     private final int[][] board;
     private final int rowColSize = 3;
     private String player1; 
@@ -42,11 +41,16 @@ public class TTT {
     public TTTStatus getTTTStatus() {
         return tttStatus;
     }
-
+    
     public int[][] getBoard() {
         return board;
     }
 
+    /**
+     * Checks if game has been won
+     * @param symbol
+     * @return True if game has been won , false otherwise
+     */
     public boolean hasWon(int symbol) {
         return checkRows(symbol) || checkCols(symbol) || checkDiag(symbol);
     }
@@ -108,11 +112,17 @@ public class TTT {
         return diag1 == rowColSize || diag2 == rowColSize;
       }
 
+    /**
+     * Makes a move at board[row][col]
+     * @param row
+     * @param col
+     * @throws IllegalArgumentException
+     */
     public void move(final int row, final int col) throws IllegalArgumentException {
 		if (row < 0 || row > rowColSize - 1 || col < 0 || col > rowColSize - 1) {
 			throw new IllegalArgumentException(
 					SlackErrors.OUT_OF_BOUNDS.getValue());
-		} else if (board[row][col] != EMPTY) {
+		} else if (board[row][col] != -1) {
 			throw new IllegalArgumentException(
 					SlackErrors.ALEADY_FILLED.getValue());
 		} else {
@@ -134,6 +144,10 @@ public class TTT {
 		}
     }
  
+    /**
+     * Displays the current state of the board
+     * @return Current state of the board
+     */
     public String displayBoard() {   	
         StringBuilder sb = new StringBuilder();
         sb.append("\n-------------\n");
@@ -147,7 +161,7 @@ public class TTT {
                     case 0:
                         sb.append(" O ");
                         break;
-                    case EMPTY:
+                    case -1:
                         sb.append(" # ");
                         break;
                     default:
@@ -165,6 +179,10 @@ public class TTT {
         return sb.toString();
     }
 
+    /**
+     * Gets whose turn it is to play
+     * @return Player whose turn it is to play
+     */
     public String getWhoseTurnToPlay(){
         StringBuilder sb = new StringBuilder();
         if (this.symbol == 1){

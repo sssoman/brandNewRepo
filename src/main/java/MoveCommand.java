@@ -79,6 +79,12 @@ public class MoveCommand implements Command {
 		}
 	}
 
+        /**
+	 * Check if it is player's turn
+	 * @param slackRequest
+	 * @param ttt
+	 * @return If it is player's turn
+	 */
 	private boolean isTurn(SlackRequest slackRequest, TTT ttt) {
 		boolean isTurn = true;
 		if (!ttt.getCurrentPlayer().equals(slackRequest.getUserName())) {

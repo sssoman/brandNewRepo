@@ -1,4 +1,6 @@
-
+/**
+ * Error mappings for different error conditions
+ */
 public enum SlackErrors {
 	BAD_REQUEST("Bad Request!"), 
        INVALID_CHANNEL_STATE("Invalid channel state!"), 
