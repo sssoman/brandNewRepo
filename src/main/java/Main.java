@@ -115,7 +115,7 @@ public class Main extends AbstractHandler {
 					final String[] tokens = text.split(Command.SEPARATOR);
 					String command = tokens[0];
 					try {
-					    slackUsers = getSlackUsers(sRequest.getChannelId());
+					    slackUsers = getSlackUsers(request.getParameter(CHANNEL_ID));
 				    } catch (Exception e) {
 					    // No users found in the team, invalid state but do not want the error to propagate
 					    // Would just add logging/internal errors
