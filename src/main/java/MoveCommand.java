@@ -51,7 +51,7 @@ public class MoveCommand implements Command {
 									+ ttt.getCurrentPlayer() + " won!" + "\n"
 									+ ttt.displayBoard();
 						} else if (ttt.getTTTStatus() == TTTStatus.DRAW) {
-							endingMessage = "It is a draw! " + "\n"
+							endingMessage = "Game ends! It is a draw! " + "\n"
 									+ ttt.displayBoard();
 						}
 						if (endingMessage != null) {
