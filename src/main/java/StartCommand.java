@@ -19,7 +19,7 @@ public class StartCommand implements Command {
 							ResponseType.EPHEMERAL.getValue());
 				}
 				final String opponent = tokens[1];
-				if (slackUsers == null || slackUsers.isEmpty() || !slackUsers.contains(opponent)) {
+				if (slackUsers != null && !slackUsers.isEmpty() && !slackUsers.contains(opponent)) {
 					/* For this use case only users with access can issue this command.
 					 * Hence we could say invalid user error here but in case this is a 
 					 * phishing attempt just show a generic error. 
