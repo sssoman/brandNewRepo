@@ -63,7 +63,8 @@ Game status is specified in the TTTStatus enum - game can be in progress, player
 ## Possible extensions :
 
 Board size assumed to be 3*3 since it is a game of tictactoe. If a larger board is needed we can extend this to maybe pass in board size as another argument. We can accordingly create a board with the appropriate size. 
-Addition of other commands such as ‘terminate’ which ends the current game. We could have it so that the command can only be exercised by the player whose turn it is. This prevents a game hanging for a long time in case a user has to step away from the channel for some time since a channel can only have one game in progress at a time.
+Addition of other commands such as ‘terminate’ which ends the current game. We could have it so that the command can only be exercised by the player whose turn it is. This prevents a game hanging for a long time in case a user has to step away from the channel for some time since a channel can only have one game in progress at a time. 
+The current tests are pretty basic - just testing that the functions do the right thing. We could have a more extensive testing framework where a mock server can be setup with mock Slack request and responses.
 
 ## Minor cleanup :
 
